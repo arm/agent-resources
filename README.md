@@ -35,14 +35,14 @@ Every entry provides four things, so an agent gets concise selection context plu
 | **Name** | The resource's name. |
 | **URL** | A public link to the resource. |
 | **When to use it** | 1-2 sentences on when it is useful for software developers -- the selection signal. |
-| **Example use case** | One realistic, one-line scenario in the developer's own words -- the request or situation that should trigger this resource. Concrete beats comprehensive; one example is enough. |
+| **Example use case** | A short concrete scenario (2-4 sentences): the situation the developer is in, what the agent does with this resource, and the outcome. One good scenario beats a long capability list. |
 
 ### Worked example
 
 > **Arm MCP Server**
 > https://github.com/arm/mcp
 > **When to use it:** Gives an AI assistant Arm-specific tools -- semantic search over Arm docs and learning resources, x86->Arm code-migration analysis, and container-architecture checks. Reach for it when you need grounded Arm knowledge or want to check or port code for Arm.
-> **Example use case:** "Is my Docker image Arm-compatible, and what would it take to migrate my x86 service to Graviton?"
+> **Example use case:** A team porting a Python/C++ service from x86 to Graviton is unsure which dependencies are Arm-ready. The agent queries the Arm MCP Server to semantic-search Arm's docs and run a migration and container-architecture scan across the codebase and image, gets back the specific packages that need an aarch64 build plus the recommended fixes, and applies them so the service builds and passes on Graviton.
 
 ### Copy-paste template
 
@@ -51,7 +51,7 @@ Every entry provides four things, so an agent gets concise selection context plu
 
 - **URL:** <https://...>
 - **When to use it:** <1-2 sentences on when it helps a software developer>
-- **Example use case:** "<one-line developer-voice scenario that should trigger this resource>"
+- **Example use case:** <2-4 sentence scenario: the developer's situation, what the agent does with this resource, and the outcome>
 ```
 
 ## How to contribute

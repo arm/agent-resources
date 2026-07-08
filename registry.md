@@ -11,7 +11,7 @@ Entries are grouped by category. Within a category, keep them alphabetical by na
 
 - **URL:** <https://github.com/arm/mcp>
 - **When to use it:** Gives an AI assistant Arm-specific tools -- semantic search over Arm docs and learning resources, x86->Arm code-migration analysis, and container-architecture checks. Reach for it when you need grounded Arm knowledge or want to check or port code for Arm.
-- **Example use case:** "Is my Docker image Arm-compatible, and what would it take to migrate my x86 service to Graviton?"
+- **Example use case:** A team porting a Python/C++ service from x86 to Graviton is unsure which dependencies are Arm-ready. The agent queries the Arm MCP Server to semantic-search Arm's docs and run a migration and container-architecture scan across the codebase and image, gets back the specific packages that need an aarch64 build plus the recommended fixes, and applies them so the service builds and passes on Graviton.
 
 ## Knowledge bases & documentation
 
