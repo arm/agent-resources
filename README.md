@@ -11,58 +11,99 @@ URL be referenced from agent flows while the list underneath keeps growing.
 
 ## How agents use this
 
-An agent is handed the URL of this repo and a short description. It reads the registry, matches a
-developer's task against each entry's **When to use it** and **Example use case**, and follows the
-resource URL only when relevant. That keeps the agent's context small and its choices grounded in
-concrete examples rather than long descriptions.
+An agent is handed the URL of this repo and a short description. It reads
+[`registry.yaml`](registry.yaml), matches a developer's task against each entry's `when_to_use`
+and `example_use_case`, and follows the resource `url` only when relevant. That keeps the agent's
+context small and its choices grounded in concrete examples rather than long descriptions.
 
 ## What belongs here
 
 - **Only already open-sourced or Anaqua-cleared codebases and public documentation.** No
   internal-only repos, no gated pages, no anything that is not already public. If you are unsure
-  whether a resource is cleared, do not add it.
+  whether a resource is cleared, do not add it. (A tool can be public even when its source repo is
+  not -- point at the public product page or docs, never the internal repo.)
 - Resources that genuinely help a software developer building on Arm: tools, SDKs, learning
   paths, knowledge bases, MCP servers, optimization/profiling guides, reference implementations.
 - One entry per resource. If a resource moves, update its pointer here rather than the URL that
   references this repo.
 
-## Entry format
+## The registry format
 
-Every entry provides four things, so an agent gets concise selection context plus one exemplar:
+The registry is **YAML** ([`registry.yaml`](registry.yaml)) so it is both agent- and
+script-friendly and can be checked by a deterministic validator. Every push and pull request is
+validated against [`schema.json`](schema.json) in CI.
+
+Each entry has six fields:
 
 | Field | What to write |
 |---|---|
-| **Name** | The resource's name. |
-| **URL** | A public link to the resource. |
-| **When to use it** | 1-2 sentences on when it is useful for software developers -- the selection signal. |
-| **Example use case** | A short concrete scenario (2-4 sentences): the situation the developer is in, what the agent does with this resource, and the outcome. One good scenario beats a long capability list. |
+| `name` | The resource's name. |
+| `url` | A public `https://` link to the resource. |
+| `category` | One of the categories below -- the shelf it lives on. |
+| `contexts` | One or more developer contexts it is relevant to (see below). |
+| `when_to_use` | 1-2 sentences on when it helps a software developer -- the selection signal. |
+| `example_use_case` | A short concrete scenario (2-4 sentences): the developer's situation, what the agent does with this resource, and the outcome. One good scenario beats a long capability list. |
 
-### Worked example
+### Categories
 
-> **Arm MCP Server**
-> https://github.com/arm/mcp
-> **When to use it:** Gives an AI assistant Arm-specific tools -- semantic search over Arm docs and learning resources, x86->Arm code-migration analysis, and container-architecture checks. Reach for it when you need grounded Arm knowledge or want to check or port code for Arm.
-> **Example use case:** A team porting a Python/C++ service from x86 to Graviton is unsure which dependencies are Arm-ready. The agent queries the Arm MCP Server to semantic-search Arm's docs and run a migration and container-architecture scan across the codebase and image, gets back the specific packages that need an aarch64 build plus the recommended fixes, and applies them so the service builds and passes on Graviton.
+`mcp-servers`, `knowledge-bases`, `learning-paths`, `profiling-optimization`, `sdks-tools`,
+`reference-implementations`.
 
-### Copy-paste template
+### Developer contexts
 
-```markdown
-### <Name>
+The context(s) an incoming agent would infer from the developer's coding environment. Tagging
+entries lets us later serve a smaller, context-specific slice of the registry without duplicating
+any source content (see [Scaling](#scaling)):
 
-- **URL:** <https://...>
-- **When to use it:** <1-2 sentences on when it helps a software developer>
-- **Example use case:** <2-4 sentence scenario: the developer's situation, what the agent does with this resource, and the outcome>
+`cloud-development`, `compiled-languages`, `mobile-games`, `ml-developer`, `embedded-development`,
+`performance-optimization`.
+
+### Worked entry
+
+```yaml
+- name: Arm MCP Server
+  url: https://github.com/arm/mcp
+  category: mcp-servers
+  contexts: [cloud-development, compiled-languages, performance-optimization]
+  when_to_use: >-
+    Gives an AI assistant Arm-specific tools -- semantic search over Arm docs and learning
+    resources, x86->Arm code-migration analysis, container-architecture checks, and running Arm
+    Performix profiling recipes over SSH. Reach for it when you need grounded Arm knowledge or
+    want to check, port, or profile code for Arm.
+  example_use_case: >-
+    A team porting a Python/C++ service from x86 to Graviton is unsure which dependencies are
+    Arm-ready. The agent queries the Arm MCP Server to semantic-search Arm's docs and run a
+    migration and container-architecture scan across the codebase and image, gets back the
+    specific packages that need an aarch64 build plus the recommended fixes, and applies them so
+    the service builds and passes on Graviton.
 ```
 
 ## How to contribute
 
 1. Confirm the resource is **already public** (open-sourced or Anaqua-cleared). This is a hard rule.
-2. Add an entry to [`registry.md`](registry.md) using the template above, filed under the right
-   category.
-3. Open a PR. Keep the description to the four fields -- no marketing copy.
+2. Add an entry to [`registry.yaml`](registry.yaml) under the right `category`, keeping entries
+   alphabetical by `name` within a category.
+3. Validate locally: `pip install pyyaml jsonschema && python scripts/validate.py`.
+4. Open a PR. Keep it to the six fields -- no marketing copy. CI runs the validator.
 
 Nominating a resource but not sure how to phrase it? Open an issue with the name + URL and a
-maintainer will help shape the **When to use it** / **Example use case** lines.
+maintainer will help shape the `when_to_use` / `example_use_case` lines.
+
+## Scaling
+
+The registry is one file today. It is designed so the moves discussed for scale are cheap and add
+no duplicated content:
+
+- **Split by category.** Every entry already carries a `category`, so `registry.yaml` can be split
+  into `registry/<category>.yaml` for progressive discovery once the list is large, with no change
+  to entry contents.
+- **Per-developer-context views.** Every entry already carries `contexts`, so smaller,
+  context-specific views (e.g. `developer-contexts/performance-optimization.yaml`) can be
+  **generated** from this single source rather than hand-maintained -- an agent loads only the
+  slice matching the developer's environment, and there is still exactly one place to edit a
+  resource.
+
+Until the list is large enough to need them, we keep a single source of truth here.
 
 ## Maintenance
 
