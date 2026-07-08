@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/arm/agent-resources/schema.json",
-  "title": "Arm Agent Resources registry",
+  "$id": "https://github.com/arm/agent-resources/schema/entry-file.json",
+  "title": "Arm Agent Resources category file",
   "type": "object",
   "required": ["resources"],
   "additionalProperties": false,
@@ -16,14 +16,7 @@
     "resource": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "name",
-        "url",
-        "category",
-        "contexts",
-        "when_to_use",
-        "example_use_case"
-      ],
+      "required": ["name", "url", "contexts", "when_to_use", "example_use_case"],
       "properties": {
         "name": { "type": "string", "minLength": 1 },
         "url": {
@@ -31,17 +24,6 @@
           "format": "uri",
           "pattern": "^https://",
           "description": "Public https link. A tool may be public even when its source repo is not -- point at the public product page or docs."
-        },
-        "category": {
-          "type": "string",
-          "enum": [
-            "mcp-servers",
-            "knowledge-bases",
-            "learning-paths",
-            "profiling-optimization",
-            "sdks-tools",
-            "reference-implementations"
-          ]
         },
         "contexts": {
           "type": "array",

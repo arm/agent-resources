@@ -1,0 +1,22 @@
+# Category: mcp-servers
+# Entries for the "mcp-servers" category. The category is implied by this file's
+# name -- do not repeat it per entry. Keep entries alphabetical by name, and bump
+# the count for this category in ../registry.yaml when you add or remove one.
+# See ../README.md for the entry format and the public-only rule.
+
+resources:
+  - name: Arm MCP Server
+    url: https://github.com/arm/mcp
+    contexts: [cloud-development, compiled-languages, performance-optimization]
+    when_to_use: >-
+      Gives an AI assistant Arm-specific tools -- semantic search over Arm docs and
+      learning resources, x86->Arm code-migration analysis, container-architecture
+      checks, and running Arm Performix profiling recipes over SSH. Reach for it when
+      you need grounded Arm knowledge or want to check, port, or profile code for Arm.
+    example_use_case: >-
+      A team porting a Python/C++ service from x86 to Graviton is unsure which
+      dependencies are Arm-ready. The agent queries the Arm MCP Server to
+      semantic-search Arm's docs and run a migration and container-architecture scan
+      across the codebase and image, gets back the specific packages that need an
+      aarch64 build plus the recommended fixes, and applies them so the service builds
+      and passes on Graviton.

@@ -1,46 +1,49 @@
-# Arm Agent Resources -- registry
+# Arm Agent Resources -- registry index (progressive discovery)
 #
-# Single source of truth for the registry. One entry per resource.
-# See README.md for the schema, the category / context vocabulary, and the
-# contribution rules (only already open-sourced / Anaqua-cleared codebases and
-# public docs).
+# An agent reads this small index first, picks the categories relevant to the
+# developer's task, and loads only those registry/<category>.yaml files -- keeping
+# context small. Entry format, the category / context vocabulary, and the
+# contribution rules live in README.md.
 #
-# Validated in CI against schema.json (.github/workflows/validate.yml). Category
-# subfiles and per-developer-context views are generated from this file as the
-# list grows -- keep the source here single and unduplicated.
+# Validated in CI: this index against schema/index.json, each category file against
+# schema/entry-file.json (.github/workflows/validate.yml). The counts below are
+# checked against the actual files, so they cannot drift.
 
-resources:
-  - name: Arm MCP Server
-    url: https://github.com/arm/mcp
-    category: mcp-servers
-    contexts: [cloud-development, compiled-languages, performance-optimization]
-    when_to_use: >-
-      Gives an AI assistant Arm-specific tools -- semantic search over Arm docs and
-      learning resources, x86->Arm code-migration analysis, container-architecture
-      checks, and running Arm Performix profiling recipes over SSH. Reach for it when
-      you need grounded Arm knowledge or want to check, port, or profile code for Arm.
-    example_use_case: >-
-      A team porting a Python/C++ service from x86 to Graviton is unsure which
-      dependencies are Arm-ready. The agent queries the Arm MCP Server to
-      semantic-search Arm's docs and run a migration and container-architecture scan
-      across the codebase and image, gets back the specific packages that need an
-      aarch64 build plus the recommended fixes, and applies them so the service builds
-      and passes on Graviton.
+categories:
+  - key: mcp-servers
+    title: MCP servers
+    description: >-
+      Model Context Protocol servers that hand an AI assistant Arm-specific tools.
+    file: registry/mcp-servers.yaml
+    count: 1
 
-  - name: Arm Performix
-    url: https://developer.arm.com/servers-and-cloud-computing/arm-performix
-    category: profiling-optimization
-    contexts: [performance-optimization, cloud-development, ml-developer]
-    when_to_use: >-
-      Free performance-analysis toolkit for workloads on Arm servers and cloud
-      (Neoverse / Graviton). Use it to find where time actually goes -- function-level
-      insight, visualizations, and guided recommendations derived from hardware-level
-      execution data -- before and after a change. Runnable standalone (see the
-      learn.arm.com install guide) or through the Arm MCP Server's recipe tool.
-    example_use_case: >-
-      A team porting a JSON-heavy API from x86 to Graviton finds it ~40% slower in
-      staging than expected. The agent runs an Arm Performix recipe against the live
-      service on the Graviton box, pinpoints the cost in a parser byte-scanning loop
-      that fell back to a generic path with no Arm SIMD, swaps in a SIMD-enabled parser
-      build, and re-profiles to confirm latency drops back in line -- clearing the
-      migration to ship.
+  - key: knowledge-bases
+    title: Knowledge bases & documentation
+    description: >-
+      Searchable Arm documentation and knowledge sources.
+    count: 0
+
+  - key: learning-paths
+    title: Learning paths & tutorials
+    description: >-
+      Step-by-step guides from learn.arm.com and their source repos.
+    count: 0
+
+  - key: profiling-optimization
+    title: Profiling & optimization
+    description: >-
+      Tools and guides for measuring and improving software performance on Arm.
+    file: registry/profiling-optimization.yaml
+    count: 1
+
+  - key: sdks-tools
+    title: SDKs & tools
+    description: >-
+      Libraries, SDKs, and command-line tools for building on Arm.
+    count: 0
+
+  - key: reference-implementations
+    title: Reference implementations
+    description: >-
+      Example projects and reference code targeting Arm.
+    count: 0
