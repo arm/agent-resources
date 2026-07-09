@@ -1,0 +1,21 @@
+# Context: embedded-development
+# Resources relevant to the "embedded-development" developer context. The context is
+# implied by this file's name. Each resource carries its `category`. Keep entries
+# alphabetical by name, and bump this context's count in ../registry.yaml on change.
+# A resource here that also serves other contexts must appear -- identically -- in
+# those files too (CI checks). See ../README.md for the entry format and rules.
+
+resources:
+  - name: Arm Toolchain
+    url: https://github.com/arm/arm-toolchain
+    category: sdks-tools
+    when_to_use: >-
+      An open, LLVM/Clang-based toolchain for building software for Arm and AArch64 --
+      both bare-metal/embedded targets and AArch64 native Linux. Reach for it to compile,
+      cross-compile, or stand up a reproducible, scriptable Arm build toolchain off a
+      closed vendor GUI.
+    example_use_case: >-
+      A team building firmware for a Cortex-M board is stuck on a closed vendor toolchain
+      with no CI story. The agent sets up the Arm Toolchain (LLVM/Clang for AArch64),
+      cross-compiles the project, wires the build into CI, and confirms the binaries build
+      and link for the target -- giving the team an open, automatable build path.
