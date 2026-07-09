@@ -1,0 +1,53 @@
+# Arm Agent Resources -- registry index (progressive discovery, context-first)
+#
+# An agent reads this small index first, picks the developer context(s) matching the
+# task, and loads only those registry/<context>.yaml files. Inside a context file each
+# resource carries its category (mcp-servers, sdks-tools, ...). A resource relevant to
+# several contexts appears in each of their files, with identical content; the
+# validator fails on any drift. Entry format, the context / category vocabulary, and
+# the contribution rules live in README.md.
+#
+# Validated in CI: this index against schema/index.json, each context file against
+# schema/entry-file.json (.github/workflows/validate.yml). Counts are checked against
+# the files, so they cannot drift.
+
+contexts:
+  - key: cloud-development
+    title: Cloud development
+    description: >-
+      Building, porting, or running services on Arm servers and cloud (Graviton, Neoverse).
+    file: registry/cloud-development.yaml
+    count: 2
+
+  - key: compiled-languages
+    title: Compiled languages
+    description: >-
+      Working in C, C++, Rust, Go, and similar toolchains targeting Arm.
+    file: registry/compiled-languages.yaml
+    count: 1
+
+  - key: mobile-games
+    title: Mobile & games
+    description: >-
+      Developing mobile apps and games for Arm-based devices.
+    count: 0
+
+  - key: ml-developer
+    title: ML developer
+    description: >-
+      Training or deploying machine-learning workloads on Arm.
+    file: registry/ml-developer.yaml
+    count: 1
+
+  - key: embedded-development
+    title: Embedded development
+    description: >-
+      Building firmware and software for Arm microcontrollers and embedded systems.
+    count: 0
+
+  - key: performance-optimization
+    title: Performance optimization
+    description: >-
+      Profiling and optimizing software performance on Arm.
+    file: registry/performance-optimization.yaml
+    count: 2
