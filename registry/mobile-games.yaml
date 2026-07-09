@@ -1,25 +1,23 @@
-# Context: ml-developer
-# Resources relevant to the "ml-developer" developer context. The context is
+# Context: mobile-games
+# Resources relevant to the "mobile-games" developer context. The context is
 # implied by this file's name. Each resource carries its `category`. Keep entries
 # alphabetical by name, and bump this context's count in ../registry.yaml on change.
 # A resource here that also serves other contexts must appear -- identically -- in
 # those files too (CI checks). See ../README.md for the entry format and rules.
 
 resources:
-  - name: Arm ML Inference Advisor (MLIA)
-    url: https://github.com/arm/mlia
-    category: profiling-optimization
+  - name: Arm Accuracy Super Resolution (ASR)
+    url: https://github.com/arm/accuracy-super-resolution
+    category: sdks-tools
     when_to_use: >-
-      The ML Inference Advisor analyzes a neural network against a target Arm IP (Ethos-U,
-      Cortex) and reports how to make it run better -- operator compatibility, performance
-      estimates, and optimization (pruning / clustering) guidance. Reach for it before
-      deploying a model to an Arm edge target.
+      Arm Accuracy Super Resolution (ASR) is a temporal upscaling technique that raises
+      rendered image fidelity while cutting GPU cost on mobile. Reach for it when a mobile
+      or game rendering pipeline needs more visual quality within a tight Arm GPU budget.
     example_use_case: >-
-      A team is about to deploy a vision model to an Ethos-U microNPU and is unsure it
-      will fit or run fast enough. The agent runs MLIA against the model and target, gets
-      back which operators fall off the accelerator, the estimated cycles, and concrete
-      optimization advice, applies the suggested clustering, and re-checks -- landing a
-      model that maps cleanly onto the NPU.
+      A mobile game is GPU-bound at native resolution and dropping frames. The agent
+      integrates Arm ASR so the game renders at a lower internal resolution and upscales,
+      tunes the integration for the target Arm GPU, and confirms the frame rate recovers
+      while image quality holds -- reclaiming GPU budget with no visible quality hit.
 
   - name: Arm ML SDK for Vulkan
     url: https://github.com/arm/ai-ml-sdk-for-vulkan
@@ -35,22 +33,6 @@ resources:
       the model to the VGF format and run it through the Vulkan ML extensions with the
       scenario runner, verifying it executes on the target mobile GPU alongside the render
       pipeline.
-
-  - name: Arm Performix
-    url: https://developer.arm.com/servers-and-cloud-computing/arm-performix
-    category: profiling-optimization
-    when_to_use: >-
-      Free performance-analysis toolkit for workloads on Arm servers and cloud (Neoverse /
-      Graviton). Use it to find where time actually goes -- function-level insight,
-      visualizations, and guided recommendations derived from hardware-level execution
-      data -- before and after a change. Runnable standalone (see the learn.arm.com
-      install guide) or through the Arm MCP Server's recipe tool.
-    example_use_case: >-
-      A team porting a JSON-heavy API from x86 to Graviton finds it ~40% slower in staging
-      than expected. The agent runs an Arm Performix recipe against the live service on
-      the Graviton box, pinpoints the cost in a parser byte-scanning loop that fell back
-      to a generic path with no Arm SIMD, swaps in a SIMD-enabled parser build, and
-      re-profiles to confirm latency drops back in line -- clearing the migration to ship.
 
   - name: Neural Graphics Model Gym
     url: https://github.com/arm/neural-graphics-model-gym

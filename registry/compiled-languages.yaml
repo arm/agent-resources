@@ -11,13 +11,40 @@ resources:
     category: mcp-servers
     when_to_use: >-
       Gives an AI assistant Arm-specific tools -- semantic search over Arm docs and
-      learning resources, x86->Arm code-migration analysis, container-architecture
-      checks, and running Arm Performix profiling recipes over SSH. Reach for it when
-      you need grounded Arm knowledge or want to check, port, or profile code for Arm.
+      learning resources, x86->Arm code-migration analysis, container-architecture checks,
+      and running Arm Performix profiling recipes over SSH. Reach for it when you need
+      grounded Arm knowledge or want to check, port, or profile code for Arm.
     example_use_case: >-
       A team porting a Python/C++ service from x86 to Graviton is unsure which
-      dependencies are Arm-ready. The agent queries the Arm MCP Server to
-      semantic-search Arm's docs and run a migration and container-architecture scan
-      across the codebase and image, gets back the specific packages that need an
-      aarch64 build plus the recommended fixes, and applies them so the service builds
-      and passes on Graviton.
+      dependencies are Arm-ready. The agent queries the Arm MCP Server to semantic-search
+      Arm's docs and run a migration and container-architecture scan across the codebase
+      and image, gets back the specific packages that need an aarch64 build plus the
+      recommended fixes, and applies them so the service builds and passes on Graviton.
+
+  - name: Arm Toolchain
+    url: https://github.com/arm/arm-toolchain
+    category: sdks-tools
+    when_to_use: >-
+      An open, LLVM/Clang-based toolchain for building software for Arm and AArch64 --
+      both bare-metal/embedded targets and AArch64 native Linux. Reach for it to compile,
+      cross-compile, or stand up a reproducible, scriptable Arm build toolchain off a
+      closed vendor GUI.
+    example_use_case: >-
+      A team building firmware for a Cortex-M board is stuck on a closed vendor toolchain
+      with no CI story. The agent sets up the Arm Toolchain (LLVM/Clang for AArch64),
+      cross-compiles the project, wires the build into CI, and confirms the binaries build
+      and link for the target -- giving the team an open, automatable build path.
+
+  - name: Metis
+    url: https://github.com/arm/metis
+    category: sdks-tools
+    when_to_use: >-
+      An open, AI-driven tool for deep security code review -- it reasons about a codebase
+      to surface vulnerabilities and risky patterns, not just pattern-match.
+      General-purpose (not Arm-specific); useful for hardening any service before it
+      ships.
+    example_use_case: >-
+      A team is prepping a service for release and wants a security pass beyond a linter.
+      The agent runs Metis over the codebase, gets back reasoned findings -- an
+      auth-bypass path, an injection sink -- with locations and rationale, fixes the
+      confirmed issues, and re-runs to confirm they are cleared before the release.
