@@ -12,6 +12,7 @@ Layout:
 """
 import json
 import sys
+from collections import Counter
 from pathlib import Path
 
 import yaml
@@ -21,11 +22,6 @@ ROOT = Path(__file__).resolve().parent.parent
 INDEX = ROOT / "registry.yaml"
 INDEX_SCHEMA = ROOT / "schema" / "index.json"
 ENTRY_SCHEMA = ROOT / "schema" / "entry-file.json"
-
-VOCAB = {
-    "mcp-servers", "knowledge-bases", "learning-paths",
-    "profiling-optimization", "sdks-tools", "reference-implementations",
-}
 
 
 def load_yaml(path):
@@ -45,6 +41,9 @@ def main() -> int:
     index = load_yaml(INDEX)
     problems = []
 
+    # Single source for the category vocabulary: the index schema's key enum.
+    vocab = set(index_schema["$defs"]["category"]["properties"]["key"]["enum"])
+
     collect_schema_errors("index", index_schema, index, problems)
 
     categories = index.get("categories", [])
@@ -53,7 +52,7 @@ def main() -> int:
     # The index is a complete, non-duplicated taxonomy.
     for key in sorted({k for k in keys if keys.count(k) > 1}):
         problems.append(f"index: duplicate category key {key!r}")
-    missing = VOCAB - set(keys)
+    missing = vocab - set(keys)
     if missing:
         problems.append(f"index: missing categories {sorted(missing)}")
 
@@ -92,8 +91,19 @@ def main() -> int:
             problems.append(f"{file}: entries not alphabetical by name: {names}")
         all_names += names
 
-    for name in sorted({n for n in all_names if all_names.count(n) > 1}):
-        problems.append(f"duplicate name across registry: {name!r}")
+    # Every file under registry/ must be referenced by the index, or its entries
+    # are unreachable for an agent that follows the index.
+    referenced = {c.get("file") for c in categories if c.get("file")}
+    for path in sorted((ROOT / "registry").glob("*.yaml")):
+        rel = f"registry/{path.name}"
+        if rel not in referenced:
+            problems.append(f"{rel}: not referenced by the index (add file + count in registry.yaml)")
+
+    # Names are unique across the registry, case-insensitively (matching the
+    # case-insensitive ordering check above).
+    dupes = sorted(name for name, n in Counter(x.lower() for x in all_names).items() if n > 1)
+    for name in dupes:
+        problems.append(f"duplicate name across registry (case-insensitive): {name!r}")
 
     if problems:
         print(f"registry is INVALID ({len(problems)} problem(s)):")
