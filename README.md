@@ -9,15 +9,20 @@ This repo is a **registry of pointers, not a mirror**. It does not host the reso
 to them and says, in one line, when they are useful. Keeping it small and stable lets a single
 URL be referenced from agent flows while the list underneath keeps growing.
 
-## How agents use this (progressive discovery)
+## How agents use this (progressive discovery, context-first)
 
 An agent is handed the URL of this repo and a short description. It reads the small index in
-[`registry.yaml`](registry.yaml), which lists the categories and what each is for, picks the ones
-relevant to the developer's task, and loads only those [`registry/<category>.yaml`](registry/)
-files. Within a file it matches the task against each entry's `when_to_use` and `example_use_case`
-and follows the resource `url` only when relevant. Loading one small index plus a couple of
-category files -- rather than the whole registry -- keeps the agent's context small and its
-choices grounded in concrete examples.
+[`registry.yaml`](registry.yaml), which lists **developer contexts** -- the situation an agent
+infers from the developer's environment (cloud, performance work, ML, embedded, ...) -- and picks
+the one(s) matching the task. It then loads only those [`registry/<context>.yaml`](registry/)
+files. Inside a context file it matches the task against each resource's `when_to_use` and
+`example_use_case` (and can use each resource's `category` to navigate), and follows the `url`
+only when relevant. Loading one small index plus a context file or two -- rather than the whole
+registry -- keeps the agent's context small and its choices grounded in concrete examples.
+
+We organize **context-first** (rather than by resource type) because an agent usually starts from
+the developer's situation -- "I'm porting to Graviton," "I'm optimizing a workload" -- not from
+knowing which kind of resource it needs.
 
 ## What belongs here
 
@@ -27,64 +32,69 @@ choices grounded in concrete examples.
   not -- point at the public product page or docs, never the internal repo.)
 - Resources that genuinely help a software developer building on Arm: tools, SDKs, learning
   paths, knowledge bases, MCP servers, optimization/profiling guides, reference implementations.
-- One entry per resource. If a resource moves, update its pointer here rather than the URL that
-  references this repo.
+- One entry per resource per context. If a resource moves, update its pointer here rather than the
+  URL that references this repo.
 
 ## Layout
 
 Everything is **YAML** so it is both agent- and script-friendly and can be checked by a
-deterministic validator. Every push and pull request is validated in CI.
+deterministic validator. Every push to `main` and every pull request is validated in CI.
 
 ```
-registry.yaml              # index: the category taxonomy + counts (read this first)
+registry.yaml                    # index: the developer-context taxonomy (read this first)
 registry/
-  mcp-servers.yaml         # entries for one category, one file per category
-  profiling-optimization.yaml
+  cloud-development.yaml         # resources for one context; each carries a `category`
+  performance-optimization.yaml
   ...
 schema/
-  index.json               # schema for registry.yaml
-  entry-file.json          # schema for each registry/<category>.yaml
-scripts/validate.py        # validates the whole thing (run in CI)
+  index.json                     # schema for registry.yaml
+  entry-file.json                # schema for each registry/<context>.yaml
+scripts/validate.py              # validates the whole thing (run in CI)
 ```
 
-The **index** lists every category with a one-line description, a `count`, and (when non-empty) the
-`file` that holds its entries. Counts are checked against the files, so they cannot drift.
+The **index** lists every developer context with a one-line description, a `count`, and (when
+non-empty) the `file` that holds its resources. Counts are checked against the files, so they
+cannot drift.
 
-### Categories
+### Developer contexts (the files)
 
-`mcp-servers`, `knowledge-bases`, `learning-paths`, `profiling-optimization`, `sdks-tools`,
-`reference-implementations`. A category's file is `registry/<key>.yaml`; the category is implied by
+`cloud-development`, `compiled-languages`, `mobile-games`, `ml-developer`, `embedded-development`,
+`performance-optimization`. A context's file is `registry/<key>.yaml`; the context is implied by
 the filename, so entries do **not** repeat it.
+
+### Categories (the `category` field)
+
+Inside a context file, every resource carries a `category` -- its resource type -- so an agent can
+navigate within a context: `mcp-servers`, `knowledge-bases`, `learning-paths`,
+`profiling-optimization`, `sdks-tools`, `reference-implementations`.
 
 ### Entry fields
 
-Each entry in a category file has five fields:
+Each entry in a context file has five fields:
 
 | Field | What to write |
 |---|---|
 | `name` | The resource's name. |
 | `url` | A public `https://` link to the resource. |
-| `contexts` | One or more developer contexts it is relevant to (see below). |
+| `category` | One of the categories above. |
 | `when_to_use` | 1-2 sentences on when it helps a software developer -- the selection signal. |
 | `example_use_case` | A short concrete scenario (2-4 sentences): the developer's situation, what the agent does with this resource, and the outcome. One good scenario beats a long capability list. |
 
-### Developer contexts
+### Resources in more than one context
 
-The context(s) an incoming agent would infer from the developer's coding environment. Tagging
-entries lets us later serve a smaller, context-specific slice of the registry without duplicating
-any source content (see [Scaling](#scaling)):
-
-`cloud-development`, `compiled-languages`, `mobile-games`, `ml-developer`, `embedded-development`,
-`performance-optimization`.
+A resource relevant to several contexts (e.g. Arm Performix -> `cloud-development`, `ml-developer`,
+`performance-optimization`) is listed in **each** of those context files, with identical content,
+so an agent gets the same entry whichever context it enters from. The validator fails CI if the
+copies drift apart -- see [Maintaining multi-context resources](#maintaining-multi-context-resources).
 
 ### Worked entry
 
-From [`registry/mcp-servers.yaml`](registry/mcp-servers.yaml):
+From [`registry/performance-optimization.yaml`](registry/performance-optimization.yaml):
 
 ```yaml
 - name: Arm MCP Server
   url: https://github.com/arm/mcp
-  contexts: [cloud-development, compiled-languages, performance-optimization]
+  category: mcp-servers
   when_to_use: >-
     Gives an AI assistant Arm-specific tools -- semantic search over Arm docs and learning
     resources, x86->Arm code-migration analysis, container-architecture checks, and running Arm
@@ -101,25 +111,28 @@ From [`registry/mcp-servers.yaml`](registry/mcp-servers.yaml):
 ## How to contribute
 
 1. Confirm the resource is **already public** (open-sourced or Anaqua-cleared). This is a hard rule.
-2. Add an entry to the right `registry/<category>.yaml`, keeping entries alphabetical by `name`.
-   If the category has no file yet, create `registry/<category>.yaml` from the template above.
-3. Bump that category's `count` in [`registry.yaml`](registry.yaml) (add the `file` pointer if it
-   is the category's first entry).
+2. Decide which developer contexts it helps in. Add an **identical** entry to each
+   `registry/<context>.yaml`, keeping entries alphabetical by `name`. Create the file if that
+   context has none yet.
+3. Bump each of those contexts' `count` in [`registry.yaml`](registry.yaml) (add the `file`
+   pointer for a context's first entry).
 4. Validate locally: `pip install pyyaml jsonschema && python scripts/validate.py`.
 5. Open a PR. Keep it to the five fields -- no marketing copy. CI runs the validator.
 
 Nominating a resource but not sure how to phrase it? Open an issue with the name + URL and a
 maintainer will help shape the `when_to_use` / `example_use_case` lines.
 
-## Scaling
+## Maintaining multi-context resources
 
-The split above is the first scaling step (progressive discovery by category). The remaining move
-is designed in and adds no duplicated content:
+Context-first matches how agents work, but a resource that spans several contexts lives in several
+files. To keep that cheap and safe:
 
-- **Per-developer-context views.** Every entry carries `contexts`, so smaller, context-specific
-  views (e.g. `developer-contexts/performance-optimization.yaml`) can be **generated** from the
-  category files rather than hand-maintained -- an agent loads only the slice matching the
-  developer's environment, and there is still exactly one place to edit a resource.
+- The validator fails CI if the copies of a resource drift apart (different `url`, `category`,
+  `when_to_use`, or `example_use_case`), so inconsistencies can't merge.
+- **Planned tooling (`scripts/add_resource.py`).** Takes one resource plus the contexts it serves,
+  inserts the identical entry into each file, keeps entries sorted, updates the counts, and runs
+  the validator -- so adding or editing a multi-context resource stays a single action. Until it
+  lands, edit the copies together and let CI catch any slip.
 
 ## Maintenance
 

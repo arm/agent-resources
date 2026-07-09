@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
-"""Validate the registry index and its category files.
+"""Validate the context-first registry index and its context files.
 
 Local:  pip install pyyaml jsonschema && python scripts/validate.py
-CI runs this on every push and pull request (see .github/workflows/validate.yml).
+CI runs this on every push to main and every pull request (.github/workflows/validate.yml).
 
-Layout:
-  registry.yaml               -- index: the category taxonomy (progressive discovery)
-  registry/<category>.yaml     -- entries for one category
+Layout (context-first):
+  registry.yaml               -- index: the developer-context taxonomy (progressive discovery)
+  registry/<context>.yaml      -- resources for one developer context; each carries a category
   schema/index.json            -- schema for the index
-  schema/entry-file.json       -- schema for a category file
+  schema/entry-file.json       -- schema for a context file
+
+A resource relevant to several contexts is listed in each of their files. Those copies
+must be identical -- the consistency check below fails on any drift.
 """
 import json
 import sys
-from collections import Counter
+from collections import Counter, defaultdict
 from pathlib import Path
 
 import yaml
@@ -41,28 +44,29 @@ def main() -> int:
     index = load_yaml(INDEX)
     problems = []
 
-    # Single source for the category vocabulary: the index schema's key enum.
-    vocab = set(index_schema["$defs"]["category"]["properties"]["key"]["enum"])
+    # Single source for the context vocabulary: the index schema's key enum.
+    vocab = set(index_schema["$defs"]["context"]["properties"]["key"]["enum"])
 
     collect_schema_errors("index", index_schema, index, problems)
 
-    categories = index.get("categories", [])
-    keys = [c.get("key") for c in categories]
+    contexts = index.get("contexts", [])
+    keys = [c.get("key") for c in contexts]
 
     # The index is a complete, non-duplicated taxonomy.
     for key in sorted({k for k in keys if keys.count(k) > 1}):
-        problems.append(f"index: duplicate category key {key!r}")
+        problems.append(f"index: duplicate context key {key!r}")
     missing = vocab - set(keys)
     if missing:
-        problems.append(f"index: missing categories {sorted(missing)}")
+        problems.append(f"index: missing contexts {sorted(missing)}")
 
-    all_names = []
+    # name -> [(file, entry), ...] copies, to check cross-file consistency.
+    copies = defaultdict(list)
     total = 0
     files_seen = 0
-    for cat in categories:
-        key = cat.get("key")
-        file = cat.get("file")
-        count = cat.get("count", 0)
+    for ctx in contexts:
+        key = ctx.get("key")
+        file = ctx.get("file")
+        count = ctx.get("count", 0)
         if isinstance(count, int):
             total += count
 
@@ -89,21 +93,25 @@ def main() -> int:
         names = [r.get("name", "") for r in resources]
         if names != sorted(names, key=str.lower):
             problems.append(f"{file}: entries not alphabetical by name: {names}")
-        all_names += names
+        for name, n in Counter(x.lower() for x in names).items():
+            if n > 1:
+                problems.append(f"{file}: {name!r} listed more than once in this context")
+        for r in resources:
+            copies[r.get("name", "")].append((file, r))
 
-    # Every file under registry/ must be referenced by the index, or its entries
-    # are unreachable for an agent that follows the index.
-    referenced = {c.get("file") for c in categories if c.get("file")}
+    # Every context file must be referenced by the index.
+    referenced = {c.get("file") for c in contexts if c.get("file")}
     for path in sorted((ROOT / "registry").glob("*.yaml")):
         rel = f"registry/{path.name}"
         if rel not in referenced:
             problems.append(f"{rel}: not referenced by the index (add file + count in registry.yaml)")
 
-    # Names are unique across the registry, case-insensitively (matching the
-    # case-insensitive ordering check above).
-    dupes = sorted(name for name, n in Counter(x.lower() for x in all_names).items() if n > 1)
-    for name in dupes:
-        problems.append(f"duplicate name across registry (case-insensitive): {name!r}")
+    # A resource listed in several contexts must be identical in every file.
+    for name, entries in sorted(copies.items()):
+        canonical = entries[0][1]
+        if any(entry != canonical for _, entry in entries[1:]):
+            where = ", ".join(sorted(f for f, _ in entries))
+            problems.append(f"{name!r}: copies differ across context files ({where}) -- keep them identical")
 
     if problems:
         print(f"registry is INVALID ({len(problems)} problem(s)):")
@@ -111,7 +119,8 @@ def main() -> int:
             print(f"  - {p}")
         return 1
 
-    print(f"registry OK -- {total} resource(s) across {files_seen} populated categor(y/ies).")
+    print(f"registry OK -- {total} listing(s) across {files_seen} context file(s), "
+          f"{len(copies)} unique resource(s).")
     return 0
 
 

@@ -1,13 +1,14 @@
-# Category: profiling-optimization
-# Entries for the "profiling-optimization" category. The category is implied by this
-# file's name -- do not repeat it per entry. Keep entries alphabetical by name, and
-# bump the count for this category in ../registry.yaml when you add or remove one.
-# See ../README.md for the entry format and the public-only rule.
+# Context: ml-developer
+# Resources relevant to the "ml-developer" developer context. The context is implied
+# by this file's name. Each resource carries its `category`. Keep entries alphabetical
+# by name, and bump this context's count in ../registry.yaml on change. A resource
+# here that also serves other contexts must appear -- identically -- in those files
+# too (CI checks). See ../README.md for the entry format and rules.
 
 resources:
   - name: Arm Performix
     url: https://developer.arm.com/servers-and-cloud-computing/arm-performix
-    contexts: [performance-optimization, cloud-development, ml-developer]
+    category: profiling-optimization
     when_to_use: >-
       Free performance-analysis toolkit for workloads on Arm servers and cloud
       (Neoverse / Graviton). Use it to find where time actually goes -- function-level

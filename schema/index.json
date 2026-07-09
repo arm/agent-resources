@@ -1,19 +1,19 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/arm/agent-resources/schema/index.json",
-  "title": "Arm Agent Resources registry index",
+  "title": "Arm Agent Resources registry index (context-first)",
   "type": "object",
-  "required": ["categories"],
+  "required": ["contexts"],
   "additionalProperties": false,
   "properties": {
-    "categories": {
+    "contexts": {
       "type": "array",
       "minItems": 1,
-      "items": { "$ref": "#/$defs/category" }
+      "items": { "$ref": "#/$defs/context" }
     }
   },
   "$defs": {
-    "category": {
+    "context": {
       "type": "object",
       "additionalProperties": false,
       "required": ["key", "title", "description", "count"],
@@ -21,12 +21,12 @@
         "key": {
           "type": "string",
           "enum": [
-            "mcp-servers",
-            "knowledge-bases",
-            "learning-paths",
-            "profiling-optimization",
-            "sdks-tools",
-            "reference-implementations"
+            "cloud-development",
+            "compiled-languages",
+            "mobile-games",
+            "ml-developer",
+            "embedded-development",
+            "performance-optimization"
           ]
         },
         "title": { "type": "string", "minLength": 1 },

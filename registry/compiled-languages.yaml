@@ -1,13 +1,14 @@
-# Category: mcp-servers
-# Entries for the "mcp-servers" category. The category is implied by this file's
-# name -- do not repeat it per entry. Keep entries alphabetical by name, and bump
-# the count for this category in ../registry.yaml when you add or remove one.
-# See ../README.md for the entry format and the public-only rule.
+# Context: compiled-languages
+# Resources relevant to the "compiled-languages" developer context. The context is
+# implied by this file's name. Each resource carries its `category`. Keep entries
+# alphabetical by name, and bump this context's count in ../registry.yaml on change.
+# A resource here that also serves other contexts must appear -- identically -- in
+# those files too (CI checks). See ../README.md for the entry format and rules.
 
 resources:
   - name: Arm MCP Server
     url: https://github.com/arm/mcp
-    contexts: [cloud-development, compiled-languages, performance-optimization]
+    category: mcp-servers
     when_to_use: >-
       Gives an AI assistant Arm-specific tools -- semantic search over Arm docs and
       learning resources, x86->Arm code-migration analysis, container-architecture

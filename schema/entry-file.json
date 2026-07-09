@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/arm/agent-resources/schema/entry-file.json",
-  "title": "Arm Agent Resources category file",
+  "title": "Arm Agent Resources context file",
   "type": "object",
   "required": ["resources"],
   "additionalProperties": false,
@@ -16,7 +16,7 @@
     "resource": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "url", "contexts", "when_to_use", "example_use_case"],
+      "required": ["name", "url", "category", "when_to_use", "example_use_case"],
       "properties": {
         "name": { "type": "string", "minLength": 1 },
         "url": {
@@ -25,21 +25,16 @@
           "pattern": "^https://",
           "description": "Public https link. A tool may be public even when its source repo is not -- point at the public product page or docs."
         },
-        "contexts": {
-          "type": "array",
-          "minItems": 1,
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "enum": [
-              "cloud-development",
-              "compiled-languages",
-              "mobile-games",
-              "ml-developer",
-              "embedded-development",
-              "performance-optimization"
-            ]
-          }
+        "category": {
+          "type": "string",
+          "enum": [
+            "mcp-servers",
+            "knowledge-bases",
+            "learning-paths",
+            "profiling-optimization",
+            "sdks-tools",
+            "reference-implementations"
+          ]
         },
         "when_to_use": { "type": "string", "minLength": 1 },
         "example_use_case": { "type": "string", "minLength": 1 }
