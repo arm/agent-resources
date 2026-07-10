@@ -1,6 +1,6 @@
 # Context: performance-optimization
-# Resources relevant to the "performance-optimization" developer context. The context
-# is implied by this file's name. Each resource carries its `category`. Keep entries
+# Resources relevant to the "performance-optimization" developer context. The context is
+# implied by this file's name. Each resource carries its `category`. Keep entries
 # alphabetical by name, and bump this context's count in ../registry.yaml on change.
 # A resource here that also serves other contexts must appear -- identically -- in
 # those files too (CI checks). See ../README.md for the entry format and rules.
@@ -21,6 +21,21 @@ resources:
       across the codebase and image, gets back the specific packages that need an
       aarch64 build plus the recommended fixes, and applies them so the service builds
       and passes on Graviton.
+
+  - name: Arm ML Inference Advisor (MLIA)
+    url: https://github.com/arm/mlia
+    category: profiling-optimization
+    when_to_use: >-
+      The ML Inference Advisor analyzes a neural network against a target Arm IP (Ethos-U,
+      Cortex) and reports how to make it run better -- operator compatibility, performance
+      estimates, and optimization (pruning / clustering) guidance. Reach for it before
+      deploying a model to an Arm edge target.
+    example_use_case: >-
+      A team is about to deploy a vision model to an Ethos-U microNPU and is unsure it
+      will fit or run fast enough. The agent runs MLIA against the model and target, gets
+      back which operators fall off the accelerator, the estimated cycles, and concrete
+      optimization advice, applies the suggested clustering, and re-checks -- landing a
+      model that maps cleanly onto the NPU.
 
   - name: Arm Performix
     url: https://developer.arm.com/servers-and-cloud-computing/arm-performix

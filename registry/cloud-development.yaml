@@ -38,3 +38,17 @@ resources:
       that fell back to a generic path with no Arm SIMD, swaps in a SIMD-enabled parser
       build, and re-profiles to confirm latency drops back in line -- clearing the
       migration to ship.
+
+  - name: Metis
+    url: https://github.com/arm/metis
+    category: sdks-tools
+    when_to_use: >-
+      An open, AI-driven tool for deep security code review -- it reasons about a codebase
+      to surface vulnerabilities and risky patterns, not just pattern-match.
+      General-purpose (not Arm-specific); useful for hardening any service before it
+      ships.
+    example_use_case: >-
+      A team is prepping a service for release and wants a security pass beyond a linter.
+      The agent runs Metis over the codebase, gets back reasoned findings -- an
+      auth-bypass path, an injection sink -- with locations and rationale, fixes the
+      confirmed issues, and re-runs to confirm they are cleared before the release.
