@@ -17,37 +17,39 @@ contexts:
     description: >-
       Building, porting, or running services on Arm servers and cloud (Graviton, Neoverse).
     file: registry/cloud-development.yaml
-    count: 2
+    count: 9
 
   - key: compiled-languages
     title: Compiled languages
     description: >-
       Working in C, C++, Rust, Go, and similar toolchains targeting Arm.
     file: registry/compiled-languages.yaml
-    count: 1
+    count: 12
 
   - key: mobile-games
     title: Mobile & games
     description: >-
       Developing mobile apps and games for Arm-based devices.
-    count: 0
+    file: registry/mobile-games.yaml
+    count: 9
 
   - key: ml-developer
     title: ML developer
     description: >-
       Training or deploying machine-learning workloads on Arm.
     file: registry/ml-developer.yaml
-    count: 1
+    count: 9
 
   - key: embedded-development
     title: Embedded development
     description: >-
       Building firmware and software for Arm microcontrollers and embedded systems.
-    count: 0
+    file: registry/embedded-development.yaml
+    count: 13
 
   - key: performance-optimization
     title: Performance optimization
     description: >-
       Profiling and optimizing software performance on Arm.
     file: registry/performance-optimization.yaml
-    count: 2
+    count: 12

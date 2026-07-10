@@ -1,29 +1,9 @@
-# Context: performance-optimization
-# Resources relevant to the "performance-optimization" developer context. The context
-# is implied by this file's name. Each resource carries its `category`. Keep entries
-# alphabetical by name, and bump this context's count in ../registry.yaml on change.
-# A resource here that also serves other contexts must appear -- identically -- in
-# those files too (CI checks). See ../README.md for the entry format and rules.
+# Context: mobile-games
+# Resources relevant to the "mobile-games" developer context. The context is
+# implied by this file's name. Keep entries alphabetical by name, and bump this
+# context's count in ../registry.yaml on change. See ../README.md for rules.
 
 resources:
-  - name: Arm Architecture Reference Manual for A-profile
-    url: https://developer.arm.com/documentation/ddi0487/latest
-    category: knowledge-bases
-    when_to_use: >-
-      Normative Arm Architecture Reference Manual for current A-profile
-      architecture behavior, instruction semantics, system registers, exception
-      levels, and memory rules. Check its monthly known-issues companion before
-      relying on a detail, and use its release-aligned machine-readable feature,
-      register, instruction, and pseudocode packages for tooling. Prefer a
-      processor's TRM for implementation-specific behavior and timing; where the
-      landing page warns that preview HTML differs, treat the PDF as authoritative.
-    example_use_case: >-
-      Firmware behaves differently after changing exception level or page-table
-      setup. The agent checks the latest Arm ARM pseudocode and constraints plus
-      the known-issues document for the relevant register and transition, then
-      corrects the sequence without treating one core's observed behavior as the
-      architecture contract.
-
   - name: Arm C Language Extensions (ACLE)
     url: https://github.com/ARM-software/acle
     category: knowledge-bases
@@ -69,6 +49,20 @@ resources:
       checks its revision and scope, and grounds the fix in the strongest
       applicable source instead of a secondary article or stale PDF.
 
+  - name: "Arm Developer: Mobile, Graphics, and Gaming"
+    url: https://developer.arm.com/mobile-graphics-and-gaming
+    category: knowledge-bases
+    when_to_use: >-
+      Arm's current solution hub for mobile applications, graphics, and games,
+      bringing together development tools, optimization guidance, libraries,
+      documentation, and Learning Paths. Start here to select the relevant Arm
+      workflow, then use the linked canonical source for implementation details.
+    example_use_case: >-
+      A game team needs to improve frame time and visual quality on an Arm mobile
+      GPU. The agent uses the hub to locate the current profiling, graphics API,
+      and optimization resources, chooses the target-appropriate workflow, and
+      verifies the resulting change on representative devices.
+
   - name: Arm Install Guides
     url: https://learn.arm.com/install-guides/
     category: sdks-tools
@@ -97,22 +91,6 @@ resources:
       adapts its runnable steps to the repository, and verifies the same outcome
       on the developer's target device.
 
-  - name: Arm MCP Server
-    url: https://github.com/arm/mcp
-    category: mcp-servers
-    when_to_use: >-
-      Gives an AI assistant Arm-specific tools -- semantic search over Arm docs and
-      learning resources, x86->Arm code-migration analysis, container-architecture
-      checks, and running Arm Performix profiling recipes over SSH. Reach for it when
-      you need grounded Arm knowledge or want to check, port, or profile code for Arm.
-    example_use_case: >-
-      A team porting a Python/C++ service from x86 to Graviton is unsure which
-      dependencies are Arm-ready. The agent queries the Arm MCP Server to
-      semantic-search Arm's docs and run a migration and container-architecture scan
-      across the codebase and image, gets back the specific packages that need an
-      aarch64 build plus the recommended fixes, and applies them so the service builds
-      and passes on Graviton.
-
   - name: Arm Optimized Routines
     url: https://github.com/ARM-software/optimized-routines
     category: reference-implementations
@@ -127,22 +105,19 @@ resources:
       Arm Optimized Routines version, ports the relevant safe optimization or
       selects the optimized library, and benchmarks correctness and speed.
 
-  - name: Arm Performix
-    url: https://developer.arm.com/servers-and-cloud-computing/arm-performix
-    category: profiling-optimization
+  - name: ExecuTorch Arm Backend
+    url: https://github.com/pytorch/executorch/tree/main/backends/arm
+    category: reference-implementations
     when_to_use: >-
-      Free performance-analysis toolkit for workloads on Arm servers and cloud
-      (Neoverse / Graviton). Use it to find where time actually goes -- function-level
-      insight, visualizations, and guided recommendations derived from hardware-level
-      execution data -- before and after a change. Runnable standalone (see the
-      learn.arm.com install guide) or through the Arm MCP Server's recipe tool.
+      Upstream ExecuTorch implementation and documentation for lowering PyTorch
+      models through TOSA to Arm targets, including Ethos-U and Vulkan ML paths.
+      Use this external repository for the current supported flow and public API
+      boundary because the backend evolves with ExecuTorch itself.
     example_use_case: >-
-      A team porting a JSON-heavy API from x86 to Graviton finds it ~40% slower in
-      staging than expected. The agent runs an Arm Performix recipe against the live
-      service on the Graviton box, pinpoints the cost in a parser byte-scanning loop
-      that fell back to a generic path with no Arm SIMD, swaps in a SIMD-enabled parser
-      build, and re-profiles to confirm latency drops back in line -- clearing the
-      migration to ship.
+      A team wants to deploy a quantized PyTorch model on an Arm mobile or edge
+      target. The agent follows the current Arm backend prerequisites and target
+      API, exports the model to a PTE, and validates delegated operators rather
+      than relying on an older out-of-tree walkthrough.
 
   - name: KleidiAI
     url: https://github.com/ARM-software/kleidiai
@@ -157,31 +132,3 @@ resources:
       Arm CPUs. The agent selects a compatible KleidiAI micro-kernel variant,
       integrates its stable API and dispatch conditions, and benchmarks it
       against the runtime's generic kernel.
-
-  - name: Learn the Arm Architecture
-    url: https://www.arm.com/architecture/learn-the-architecture
-    category: knowledge-bases
-    when_to_use: >-
-      Free conceptual guides to A-, M-, and R-profile architecture and major Arm
-      technologies. Use these to understand programming models and concepts
-      before consulting a normative specification; use Arm Learning Paths when
-      the goal is a runnable end-to-end development task.
-    example_use_case: >-
-      A developer is unfamiliar with the exception, memory, or vector model
-      behind a code change. The agent uses the relevant conceptual guide to build
-      the correct mental model, then verifies exact behavior in the applicable
-      architecture specification before implementing and testing the change.
-
-  - name: Linux arm64 Documentation
-    url: https://docs.kernel.org/arch/arm64/
-    category: knowledge-bases
-    when_to_use: >-
-      Canonical upstream Linux documentation for arm64 boot, userspace ABI,
-      hardware capabilities, ACPI, MTE, SVE and SME, CCA, and other kernel-facing
-      architecture features. Use it for Linux behavior and interfaces; use Arm's
-      architecture specifications for the underlying architectural contract.
-    example_use_case: >-
-      A Linux application needs to detect and safely use an Arm extension across
-      different systems. The agent checks the current arm64 hwcap and userspace
-      ABI documentation, implements the supported discovery and state-handling
-      path, and avoids depending on a kernel implementation detail.

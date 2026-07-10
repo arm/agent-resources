@@ -1,9 +1,7 @@
-# Context: compiled-languages
-# Resources relevant to the "compiled-languages" developer context. The context is
-# implied by this file's name. Each resource carries its `category`. Keep entries
-# alphabetical by name, and bump this context's count in ../registry.yaml on change.
-# A resource here that also serves other contexts must appear -- identically -- in
-# those files too (CI checks). See ../README.md for the entry format and rules.
+# Context: embedded-development
+# Resources relevant to the "embedded-development" developer context. The context
+# is implied by this file's name. Keep entries alphabetical by name, and bump this
+# context's count in ../registry.yaml on change. See ../README.md for rules.
 
 resources:
   - name: Arm Architecture Reference Manual for A-profile
@@ -55,6 +53,34 @@ resources:
       checks its revision and scope, and grounds the fix in the strongest
       applicable source instead of a secondary article or stale PDF.
 
+  - name: "Arm Developer: Edge AI"
+    url: https://developer.arm.com/edge-ai
+    category: knowledge-bases
+    when_to_use: >-
+      Arm's current starting point for deploying AI on resource-constrained
+      Cortex-M, Cortex-A, and Ethos-U systems. Use it to discover supported quick
+      starts, tools, tutorials, and examples for edge inference, then consult the
+      linked technical source for exact target and model constraints.
+    example_use_case: >-
+      A developer needs to run a vision model within an edge device's memory and
+      latency budget. The agent uses the hub to identify the applicable target,
+      runtime, optimization, and evaluation flow, then follows the current tool
+      documentation to build and measure the deployment.
+
+  - name: "Arm Developer: Embedded and Microcontrollers"
+    url: https://developer.arm.com/embedded-and-microcontrollers
+    category: knowledge-bases
+    when_to_use: >-
+      Arm's current solution hub for embedded, microcontroller, IoT, and related
+      edge development, organized around assessing, building, and optimizing a
+      system. Start here to discover the applicable Arm tools, documentation,
+      tutorials, and ecosystem resources, then follow their canonical sources.
+    example_use_case: >-
+      A developer is starting firmware for an unfamiliar Arm-based platform.
+      The agent uses the hub to locate the current development environment,
+      platform material, security guidance, and optimization workflow, then
+      validates each choice in the linked product documentation.
+
   - name: Arm Install Guides
     url: https://learn.arm.com/install-guides/
     category: sdks-tools
@@ -82,22 +108,6 @@ resources:
       Arm-specific workflow. The agent chooses the closest current Learning Path,
       adapts its runnable steps to the repository, and verifies the same outcome
       on the developer's target device.
-
-  - name: Arm MCP Server
-    url: https://github.com/arm/mcp
-    category: mcp-servers
-    when_to_use: >-
-      Gives an AI assistant Arm-specific tools -- semantic search over Arm docs and
-      learning resources, x86->Arm code-migration analysis, container-architecture
-      checks, and running Arm Performix profiling recipes over SSH. Reach for it when
-      you need grounded Arm knowledge or want to check, port, or profile code for Arm.
-    example_use_case: >-
-      A team porting a Python/C++ service from x86 to Graviton is unsure which
-      dependencies are Arm-ready. The agent queries the Arm MCP Server to
-      semantic-search Arm's docs and run a migration and container-architecture scan
-      across the codebase and image, gets back the specific packages that need an
-      aarch64 build plus the recommended fixes, and applies them so the service builds
-      and passes on Graviton.
 
   - name: Arm Optimized Routines
     url: https://github.com/ARM-software/optimized-routines
@@ -128,19 +138,19 @@ resources:
       Toolchain releases and target guidance, configures each build explicitly,
       and verifies the resulting binaries against their intended environments.
 
-  - name: KleidiAI
-    url: https://github.com/ARM-software/kleidiai
-    category: sdks-tools
+  - name: ExecuTorch Arm Backend
+    url: https://github.com/pytorch/executorch/tree/main/backends/arm
+    category: reference-implementations
     when_to_use: >-
-      Arm-optimized, dependency-light C/C++ micro-kernels for integrating AI
-      acceleration into frameworks and runtimes, with variants for Neon, SVE,
-      SME, and SME2. Use it when building or tuning the low-level CPU execution
-      path of an ML framework, not as an end-user model runtime.
+      Upstream ExecuTorch implementation and documentation for lowering PyTorch
+      models through TOSA to Arm targets, including Ethos-U and Vulkan ML paths.
+      Use this external repository for the current supported flow and public API
+      boundary because the backend evolves with ExecuTorch itself.
     example_use_case: >-
-      A mobile inference runtime has a matrix-multiplication bottleneck on recent
-      Arm CPUs. The agent selects a compatible KleidiAI micro-kernel variant,
-      integrates its stable API and dispatch conditions, and benchmarks it
-      against the runtime's generic kernel.
+      A team wants to deploy a quantized PyTorch model on an Arm mobile or edge
+      target. The agent follows the current Arm backend prerequisites and target
+      API, exports the model to a PTE, and validates delegated operators rather
+      than relying on an older out-of-tree walkthrough.
 
   - name: Learn the Arm Architecture
     url: https://www.arm.com/architecture/learn-the-architecture
