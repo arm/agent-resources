@@ -10,9 +10,10 @@ resources:
     url: https://github.com/arm/accuracy-super-resolution
     category: sdks-tools
     when_to_use: >-
-      Arm Accuracy Super Resolution (ASR) is a temporal upscaling technique that raises
-      rendered image fidelity while cutting GPU cost on mobile. Reach for it when a mobile
-      or game rendering pipeline needs more visual quality within a tight Arm GPU budget.
+      Arm Accuracy Super Resolution (ASR) is a mobile-optimized temporal upscaling
+      technique (derived from AMD FSR2) that raises rendered image fidelity while cutting
+      GPU cost on mobile. Reach for it when a mobile or game rendering pipeline needs more
+      visual quality within a tight Arm GPU budget.
     example_use_case: >-
       A mobile game is GPU-bound at native resolution and dropping frames. The agent
       integrates Arm ASR so the game renders at a lower internal resolution and upscales,
@@ -24,9 +25,9 @@ resources:
     category: sdks-tools
     when_to_use: >-
       The Arm ML SDK for Vulkan helps you build, convert, and run ML workloads through the
-      ML extensions for Vulkan, so models execute on any Vulkan-compute-capable (mobile)
-      GPU. Reach for it when deploying ML inference into a Vulkan or graphics pipeline on
-      Arm mobile.
+      ML extensions for Vulkan -- natively on GPUs whose driver implements those
+      extensions, with an emulation layer for development on any Vulkan device. Reach for
+      it when deploying ML inference into a Vulkan or graphics pipeline on Arm mobile.
     example_use_case: >-
       A team wants to run an ML model inside their Vulkan-based mobile app without bolting
       on a separate inference runtime. The agent uses the Arm ML SDK for Vulkan to convert

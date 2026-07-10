@@ -26,9 +26,9 @@ resources:
     category: sdks-tools
     when_to_use: >-
       The Arm ML SDK for Vulkan helps you build, convert, and run ML workloads through the
-      ML extensions for Vulkan, so models execute on any Vulkan-compute-capable (mobile)
-      GPU. Reach for it when deploying ML inference into a Vulkan or graphics pipeline on
-      Arm mobile.
+      ML extensions for Vulkan -- natively on GPUs whose driver implements those
+      extensions, with an emulation layer for development on any Vulkan device. Reach for
+      it when deploying ML inference into a Vulkan or graphics pipeline on Arm mobile.
     example_use_case: >-
       A team wants to run an ML model inside their Vulkan-based mobile app without bolting
       on a separate inference runtime. The agent uses the Arm ML SDK for Vulkan to convert
@@ -40,17 +40,18 @@ resources:
     url: https://developer.arm.com/servers-and-cloud-computing/arm-performix
     category: profiling-optimization
     when_to_use: >-
-      Free performance-analysis toolkit for workloads on Arm servers and cloud (Neoverse /
-      Graviton). Use it to find where time actually goes -- function-level insight,
-      visualizations, and guided recommendations derived from hardware-level execution
-      data -- before and after a change. Runnable standalone (see the learn.arm.com
-      install guide) or through the Arm MCP Server's recipe tool.
+      Free performance-analysis toolkit for workloads on Arm servers and cloud
+      (Neoverse / Graviton). Use it to find where time actually goes -- function-level
+      insight, visualizations, and guided recommendations derived from hardware-level
+      execution data -- before and after a change. Runnable standalone (see the
+      learn.arm.com install guide) or through the Arm MCP Server's recipe tool.
     example_use_case: >-
-      A team porting a JSON-heavy API from x86 to Graviton finds it ~40% slower in staging
-      than expected. The agent runs an Arm Performix recipe against the live service on
-      the Graviton box, pinpoints the cost in a parser byte-scanning loop that fell back
-      to a generic path with no Arm SIMD, swaps in a SIMD-enabled parser build, and
-      re-profiles to confirm latency drops back in line -- clearing the migration to ship.
+      A team porting a JSON-heavy API from x86 to Graviton finds it ~40% slower in
+      staging than expected. The agent runs an Arm Performix recipe against the live
+      service on the Graviton box, pinpoints the cost in a parser byte-scanning loop
+      that fell back to a generic path with no Arm SIMD, swaps in a SIMD-enabled parser
+      build, and re-profiles to confirm latency drops back in line -- clearing the
+      migration to ship.
 
   - name: Neural Graphics Model Gym
     url: https://github.com/arm/neural-graphics-model-gym
