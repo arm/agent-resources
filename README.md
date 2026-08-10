@@ -137,4 +137,5 @@ files. To keep that cheap and safe:
 ## Maintenance
 
 Curated and maintained by the Arm Learning Paths / developer-discoverability team. This repo is
-currently **Internal** while the initial set is reviewed, and will be made **public** when ready.
+**public**. Every entry points only at already-public, Anaqua-cleared resources (see the contribution
+rules above).
