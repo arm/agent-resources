@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/arm/agent-resources/schema/entry-file.json",
-  "title": "Arm Agent Resources context file",
+  "title": "Arm Agent Resources consolidated registry",
   "type": "object",
   "required": ["resources"],
   "additionalProperties": false,
@@ -28,11 +28,10 @@
         "category": {
           "type": "string",
           "enum": [
-            "mcp-servers",
             "knowledge-bases",
-            "learning-paths",
             "profiling-optimization",
-            "sdks-tools",
+            "developer-tools",
+            "software-libraries",
             "reference-implementations"
           ]
         },

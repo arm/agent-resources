@@ -1,0 +1,283 @@
+# Arm Agent Resources -- consolidated registry
+#
+# Keep resources alphabetical by name. Entry format, categories, scope, and
+# contribution rules live in README.md. Validated in CI against
+# schema/entry-file.json by scripts/validate.py.
+
+resources:
+  - name: Arm Architecture Reference Manual for A-profile
+    url: https://developer.arm.com/documentation/ddi0487/latest
+    category: knowledge-bases
+    when_to_use: >-
+      Normative Arm Architecture Reference Manual for current A-profile
+      architecture behavior, instruction semantics, system registers, exception
+      levels, and memory rules. Check its monthly known-issues companion before
+      relying on a detail, and use its release-aligned machine-readable feature,
+      register, instruction, and pseudocode packages for tooling. Prefer a
+      processor's TRM for implementation-specific behavior and timing; where the
+      landing page warns that preview HTML differs, treat the PDF as authoritative.
+    example_use_case: >-
+      A runtime maintainer needs exact instruction or memory-ordering behavior for
+      an architecture-specific code path. The agent checks the latest Arm ARM
+      pseudocode and constraints plus the known-issues document, then implements
+      and tests the path without treating one processor's observed behavior as the
+      architecture contract.
+
+  - name: Arm C Language Extensions (ACLE)
+    url: https://github.com/ARM-software/acle
+    category: knowledge-bases
+    when_to_use: >-
+      Canonical, actively maintained specifications for Arm C/C++ language
+      extensions, including Neon, MVE, and SVE intrinsics. Use the released
+      specification when compiler behavior, intrinsic names, types, or feature
+      macros must be exact; use main only when tracking upcoming changes.
+    example_use_case: >-
+      A mobile engine's handwritten Neon path fails with a newer compiler. The
+      agent checks ACLE's released intrinsic and feature-macro definitions,
+      replaces the non-portable assumption, and adds a guarded fallback that
+      builds across supported Android toolchains.
+
+  - name: Arm Compute Library
+    url: https://github.com/ARM-software/ComputeLibrary
+    category: software-libraries
+    when_to_use: >-
+      Actively maintained low-level computer-vision and machine-learning
+      functions optimized for Arm Cortex-A, Neoverse, and Mali GPUs. Use it for
+      production CPU/GPU kernels, build guidance, supported data types, and
+      device-specific tuning rather than copying old standalone examples.
+    example_use_case: >-
+      An Android vision feature spends most of its frame budget in convolution.
+      The agent checks the current Compute Library operators and build options,
+      integrates the supported optimized path, and uses its tuning guidance to
+      reduce latency on the target Mali device.
+
+  - name: Arm Developer Documentation
+    url: https://developer.arm.com/documentation
+    category: knowledge-bases
+    when_to_use: >-
+      Arm's canonical library for public architecture and interface
+      specifications, implementation-specific TRMs, software and optimization
+      guides, tool manuals and release notes, and knowledge-base articles. Use
+      specifications for normative behavior, TRMs for named IP, guides for
+      recommendations, and KBAs as troubleshooting evidence; select the latest
+      revision unless the task targets an older implementation.
+    example_use_case: >-
+      An agent needs to confirm whether unexpected behavior is architectural,
+      implementation-specific, or a tool issue. It finds the relevant public
+      document, identifies whether it is a specification, TRM, guide, or KBA,
+      checks its revision and scope, and grounds the fix in the strongest
+      applicable source instead of a secondary article or stale PDF.
+
+  - name: "Arm Developer: AI"
+    url: https://developer.arm.com/ai
+    category: knowledge-bases
+    when_to_use: >-
+      Arm's current cross-platform AI solution hub for models, frameworks,
+      libraries, tools, and technical resources from cloud to edge. Start here
+      when selecting the Arm AI stack for a workload, then follow the linked
+      project or documentation source for exact APIs and supported versions.
+    example_use_case: >-
+      A team has a model and target class but has not chosen its deployment
+      stack. The agent uses the hub to compare the current Arm-supported
+      framework, library, and optimization routes, selects the closest fit, and
+      validates it against that project's canonical documentation.
+
+  - name: "Arm Developer: Edge AI"
+    url: https://developer.arm.com/edge-ai
+    category: knowledge-bases
+    when_to_use: >-
+      Arm's current starting point for deploying AI on resource-constrained
+      Cortex-M, Cortex-A, and Ethos-U systems. Use it to discover supported quick
+      starts, tools, tutorials, and examples for edge inference, then consult the
+      linked technical source for exact target and model constraints.
+    example_use_case: >-
+      A developer needs to run a vision model within an edge device's memory and
+      latency budget. The agent uses the hub to identify the applicable target,
+      runtime, optimization, and evaluation flow, then follows the current tool
+      documentation to build and measure the deployment.
+
+  - name: "Arm Developer: Embedded and Microcontrollers"
+    url: https://developer.arm.com/embedded-and-microcontrollers
+    category: knowledge-bases
+    when_to_use: >-
+      Arm's current solution hub for embedded, microcontroller, IoT, and related
+      edge development, organized around assessing, building, and optimizing a
+      system. Start here to discover the applicable Arm tools, documentation,
+      tutorials, and ecosystem resources, then follow their canonical sources.
+    example_use_case: >-
+      A developer is building an embedded application for an unfamiliar Arm-based
+      platform. The agent uses the hub to locate the current development
+      environment, platform material, libraries, and optimization workflow, then
+      validates each choice in the linked product documentation.
+
+  - name: "Arm Developer: Laptops and Desktops"
+    url: https://developer.arm.com/laptops-and-desktops
+    category: knowledge-bases
+    when_to_use: >-
+      Arm's current hub for building native, high-performance applications on Arm
+      PCs and Windows on Arm. Use it to find current porting guidance, tools, SDKs,
+      and performance resources, then follow the linked source for implementation
+      details.
+    example_use_case: >-
+      A desktop application needs to run natively on Windows on Arm. The agent uses
+      the hub to identify the applicable porting and performance guidance, updates
+      the build and dependencies for Arm64, and verifies the application on an Arm
+      PC.
+
+  - name: "Arm Developer: Mobile, Graphics, and Gaming"
+    url: https://developer.arm.com/mobile-graphics-and-gaming
+    category: knowledge-bases
+    when_to_use: >-
+      Arm's current solution hub for mobile applications, graphics, and games,
+      bringing together development tools, optimization guidance, libraries,
+      documentation, and Learning Paths. Start here to select the relevant Arm
+      workflow, then use the linked canonical source for implementation details.
+    example_use_case: >-
+      A game team needs to improve frame time and visual quality on an Arm mobile
+      GPU. The agent uses the hub to locate the current profiling, graphics API,
+      and optimization resources, chooses the target-appropriate workflow, and
+      verifies the resulting change on representative devices.
+
+  - name: "Arm Developer: Servers and Cloud Computing"
+    url: https://developer.arm.com/servers-and-cloud-computing
+    category: knowledge-bases
+    when_to_use: >-
+      Arm's current solution hub for building, porting, optimizing, and scaling
+      cloud-native and AI workloads on Arm servers. Start here to discover the
+      relevant Arm tools, documentation, tutorials, and ecosystem resources;
+      follow their canonical sources for exact technical or versioned details.
+    example_use_case: >-
+      A team is planning a move to Arm cloud instances but does not yet know
+      which migration and performance resources apply. The agent uses the hub to
+      identify the current porting, container, and Performix workflows, then
+      follows those sources to assess and optimize the service.
+
+  - name: Arm Install Guides
+    url: https://learn.arm.com/install-guides/
+    category: knowledge-bases
+    when_to_use: >-
+      Current, task-focused setup instructions for Arm developer tools,
+      compilers, cloud CLIs, containers, and platforms on Linux, Windows, and
+      macOS. Use these for installation and environment setup; use Arm Learning
+      Paths for end-to-end tutorials after the prerequisites are ready.
+    example_use_case: >-
+      A developer needs the correct Android or cross-compilation tooling on a
+      new workstation. The agent follows the matching Install Guide, verifies
+      the installed version and target architecture, and leaves a reproducible
+      environment ready for the project tutorial.
+
+  - name: Arm Learning Paths
+    url: https://learn.arm.com/learning-paths/
+    category: knowledge-bases
+    when_to_use: >-
+      Reproducible, code-led tutorials maintained by Arm and its ecosystem for
+      servers, laptops, phones, embedded devices, and microcontrollers. Use them
+      to accomplish a concrete development or optimization task; use the
+      separate Install Guides when only tool setup is needed.
+    example_use_case: >-
+      A developer wants to optimize a mobile workload but does not yet know the
+      Arm-specific workflow. The agent chooses the closest current Learning Path,
+      adapts its runnable steps to the repository, and verifies the same outcome
+      on the developer's target device.
+
+  - name: Arm MCP Server
+    url: https://github.com/arm/mcp
+    category: developer-tools
+    when_to_use: >-
+      Gives an AI assistant Arm-specific tools -- semantic search over Arm docs and
+      learning resources, x86->Arm code-migration analysis, container-architecture
+      checks, and running Arm Performix profiling recipes over SSH. Reach for it when
+      you need grounded Arm knowledge or want to check, port, or profile code for Arm.
+    example_use_case: >-
+      A developer needs grounded Arm guidance and automated checks while changing
+      an unfamiliar codebase. The agent queries the Arm MCP Server to search Arm's
+      documentation, analyze migration readiness and container architecture, and,
+      when performance matters, run a profiling recipe over SSH. It applies and
+      verifies targeted changes from the results.
+
+  - name: Arm Optimized Routines
+    url: https://github.com/ARM-software/optimized-routines
+    category: reference-implementations
+    when_to_use: >-
+      Maintained implementations of common math, string, floating-point, and
+      networking routines tuned for Arm processors. Use them as production-grade
+      reference code when optimizing a hot primitive or studying how an
+      architecture-aware implementation handles dispatch and edge cases.
+    example_use_case: >-
+      Profiling shows a mobile application is dominated by a standard math or
+      string primitive. The agent compares its implementation with the current
+      Arm Optimized Routines version, ports the relevant safe optimization or
+      selects the optimized library, and benchmarks correctness and speed.
+
+  - name: Arm Performix
+    url: https://developer.arm.com/servers-and-cloud-computing/arm-performix
+    category: profiling-optimization
+    when_to_use: >-
+      Free performance-analysis toolkit for workloads on Arm servers and cloud
+      (Neoverse / Graviton). Use it to find where time actually goes -- function-level
+      insight, visualizations, and guided recommendations derived from hardware-level
+      execution data -- before and after a change. Runnable standalone (see the
+      learn.arm.com install guide) or through the Arm MCP Server's recipe tool.
+    example_use_case: >-
+      A team porting a JSON-heavy API from x86 to Graviton finds it ~40% slower in
+      staging than expected. The agent runs an Arm Performix recipe against the live
+      service on the Graviton box, pinpoints the cost in a parser byte-scanning loop
+      that fell back to a generic path with no Arm SIMD, swaps in a SIMD-enabled parser
+      build, and re-profiles to confirm latency drops back in line -- clearing the
+      migration to ship.
+
+  - name: Arm Software on GitHub
+    url: https://github.com/ARM-software
+    category: knowledge-bases
+    when_to_use: >-
+      Arm's public GitHub organization for maintained software projects that are not
+      listed individually in this registry. Use it to locate the canonical source,
+      documentation, releases, and issue tracker for an Arm-delivered project.
+    example_use_case: >-
+      A developer needs an Arm-maintained library not listed in the registry. The
+      agent searches the Arm Software organization, confirms the project's purpose
+      and maintenance status, then uses the project's own documentation and releases
+      for the integration.
+
+  - name: Arm Toolchain
+    url: https://github.com/arm/arm-toolchain
+    category: developer-tools
+    when_to_use: >-
+      Arm's active LLVM-based toolchain project for bare-metal Arm targets and
+      native AArch64 Linux development, including build material, binary releases,
+      and separate embedded and Linux getting-started guidance. Use it when the
+      compiler, runtime libraries, or target configuration must come from Arm's
+      current supported toolchain rather than a generic system LLVM package.
+    example_use_case: >-
+      A C++ project must produce native AArch64 Linux utilities and cross-compiled
+      binaries with compatible LLVM tooling. The agent selects the current Arm
+      Toolchain release and target guidance, configures each build explicitly, and
+      verifies the resulting binaries against their intended environments.
+
+  - name: KleidiAI
+    url: https://github.com/ARM-software/kleidiai
+    category: software-libraries
+    when_to_use: >-
+      Arm-optimized, dependency-light C/C++ micro-kernels for integrating AI
+      acceleration into frameworks and runtimes, with variants for Neon, SVE,
+      SME, and SME2. Use it when building or tuning the low-level CPU execution
+      path of an ML framework, not as an end-user model runtime.
+    example_use_case: >-
+      A mobile inference runtime has a matrix-multiplication bottleneck on recent
+      Arm CPUs. The agent selects a compatible KleidiAI micro-kernel variant,
+      integrates its stable API and dispatch conditions, and benchmarks it
+      against the runtime's generic kernel.
+
+  - name: Learn the Arm Architecture
+    url: https://www.arm.com/architecture/learn-the-architecture
+    category: knowledge-bases
+    when_to_use: >-
+      Free conceptual guides to A-, M-, and R-profile architecture and major Arm
+      technologies. Use these to understand programming models and concepts
+      before consulting a normative specification; use Arm Learning Paths when
+      the goal is a runnable end-to-end development task.
+    example_use_case: >-
+      A developer is unfamiliar with the exception, memory, or vector model
+      behind a code change. The agent uses the relevant conceptual guide to build
+      the correct mental model, then verifies exact behavior in the applicable
+      architecture specification before implementing and testing the change.
