@@ -6,6 +6,25 @@
 # those files too (CI checks). See ../README.md for the entry format and rules.
 
 resources:
+  - name: Arm AI Portal MCP Server
+    url: https://developer.arm.com/ai
+    category: mcp-servers
+    when_to_use: >-
+      Connects a coding agent to the Arm AI Portal model catalogue -- search
+      pre-optimized models by task, format, runtime or target, and read back the
+      latency, memory and accuracy measured for a named Arm target (server CPU,
+      premium smartphone, embedded NPU, edge Linux), along with licensing,
+      provenance and deployment guides. Reach for it when choosing or sizing an AI
+      model to run on specific Arm hardware.
+    example_use_case: >-
+      A team adding on-device text generation to an Arm64 edge appliance has a hard
+      budget of under 1 GB of RAM. The agent searches the AI Portal catalogue for
+      text-generation models on that device class, compares the latency, peak memory
+      and accuracy the portal reports for each, and pulls the shortlisted model's
+      license, artifact URL and benchmark configuration. It then follows the portal's
+      deployment guide for that runtime, so the team ships against numbers measured
+      on the target instead of guessing from a generic model hub.
+
   - name: Arm MCP Server
     url: https://github.com/arm/mcp
     category: mcp-servers
